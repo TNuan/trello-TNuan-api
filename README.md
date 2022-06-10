@@ -1,4 +1,4 @@
-# MERN Stack - Building an API like Trello app by NodeJs, ExpressJs and MongoDB from scratch
+# MERN Stack - Building an API like Trello app with NodeJs, ExpressJs and MongoDB from scratch
 
 ## Requirements 
 
