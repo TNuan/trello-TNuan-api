@@ -1,0 +1,34 @@
+{
+  "name": "trello-tnuan-api",
+  "version": "1.0.0",
+  "description": "Trello clone web author by TNuan",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "eslint": "eslint src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TNuan/trello-TNuan-api.git"
+  },
+  "keywords": [
+    "api",
+    "TNuan",
+    "trello"
+  ],
+  "author": "NTNuan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TNuan/trello-TNuan-api/issues"
+  },
+  "homepage": "https://github.com/TNuan/trello-TNuan-api#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.2",
+    "@babel/eslint-parser": "^7.18.2",
+    "eslint": "^8.17.0"
+  }
+}
