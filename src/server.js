@@ -1,16 +1,24 @@
 import express from 'express'
-import { mapOrder } from '*/utilities/sort.js'
 import { connectDB } from '*/config/mongodb'
-import { env } from '*/config/environtment'
+import { env } from '*/config/environment'
 
-const app = express()
+connectDB()
+  .then(() => console.log('Connected successfully to database server !'))
+  .then(() => bootServer())
+  .catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })
 
-connectDB().catch(console.log)
+const bootServer = () => {
+  const app = express()
+  
+  app.get('/test', async (req, res) => {
+    res.end('<h1>Hello world! Nuan dev</h1> <br/>')
+  })
 
-app.get('/', (req, res) => {
-  res.end('<h1>Hello world! Nuan dev</h1> <br/>')
-})
+  app.listen(env.APP_PORT, env.APP_HOST, (err, res) => {
+    console.log('RESTful API server started on: ' + env.APP_PORT )
+  })
+}
 
-app.listen(env.PORT, env.HOST_NAME, (err, res) => {
-  console.log('RESTful API server started on: ' + env.PORT )
-})
