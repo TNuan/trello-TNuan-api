@@ -12,7 +12,7 @@ export const connectDB = async () => {
   await client.connect()
 
   // assign the clientDB to our dbInstance
-  dbInstance = client.db(env.DATABASE_NAME)  
+  dbInstance = client.db(env.DATABASE_NAME)
 }
 
 //Get Database Instance
