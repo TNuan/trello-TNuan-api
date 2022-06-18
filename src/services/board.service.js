@@ -13,4 +13,26 @@ const createNew = async (data) => {
   }
 }
 
-export const BoardService = { createNew }
+const getFullBoard = async (boradId) => {
+  try {
+    const board = await BoardModel.getFullBoard(boradId)
+    // Add card to each column 
+    board.columns.forEach(column => {
+      column.cards = board.cards.filter(c => c.columnId.toString() === column._id.toString())
+
+    })
+    // Sort columns by column order, sort cards by card order ====> This step will pass to front end dev :V
+
+    // Remove cards data from boards 
+    delete board.cards
+    // 
+    return board 
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
+export const BoardService = { 
+  createNew,
+  getFullBoard 
+} 
