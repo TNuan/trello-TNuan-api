@@ -62,7 +62,7 @@ const getFullBoard = async (boardId) => {
           foreignField: 'boardId',
           as: 'columns'
       } },
-      {  $lookup: {
+      { $lookup: {
           from: CardModel.cardCollectionName, // collection name
           localField: '_id',
           foreignField: 'boardId',

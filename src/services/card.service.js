@@ -9,7 +9,7 @@ const createNew = async (data) => {
     // do something ...
     // transform data
 
-    return result
+    return newCard
   } catch (err) {
     throw new Error(err)
   }
