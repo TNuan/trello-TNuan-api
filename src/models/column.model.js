@@ -24,9 +24,9 @@ const createNew = async (data) => {
       ...validatedValue,
       boardId: ObjectId(validatedValue.boardId)
     }
-    const result = await getDB().collection(columnCollectionName).insertOne(insertValue)
-
-    return result
+    await getDB().collection(columnCollectionName).insertOne(insertValue)
+    // console.log(insertValue)
+    return insertValue
   } catch (err) {
     throw new Error(err)
   }

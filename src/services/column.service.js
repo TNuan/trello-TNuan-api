@@ -5,10 +5,9 @@ const createNew = async (data) => {
   try {
     // transaction mongodb
     const newColumn = await ColumnModel.createNew(data)
-
-    // Update columnOrder Array in BoradCollection
+    // Update columnOrder Array in BoardCollection
     await BoardModel.pushColumnOrder(newColumn.boardId.toString(), newColumn._id.toString())
-
+  
     return newColumn
   } catch (err) {
     throw new Error(err)
