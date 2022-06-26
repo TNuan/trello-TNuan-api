@@ -29,9 +29,9 @@ const createNew = async (data) => {
 }
 
 /**
- * 
- * @param {string} boardId 
- * @param {string} columnId 
+ *
+ * @param {string} boardId
+ * @param {string} columnId
  */
 const pushColumnOrder = async (boardId, columnId) => {
   try {
@@ -57,16 +57,16 @@ const getFullBoard = async (boardId) => {
       //   }
       // },
       { $lookup: {
-          from: ColumnModel.columnCollectionName, // collection name
-          localField: '_id',
-          foreignField: 'boardId',
-          as: 'columns'
+        from: ColumnModel.columnCollectionName, // collection name
+        localField: '_id',
+        foreignField: 'boardId',
+        as: 'columns'
       } },
       { $lookup: {
-          from: CardModel.cardCollectionName, // collection name
-          localField: '_id',
-          foreignField: 'boardId',
-          as: 'cards'
+        from: CardModel.cardCollectionName, // collection name
+        localField: '_id',
+        foreignField: 'boardId',
+        as: 'cards'
       } }
     ]).toArray()
 
@@ -76,7 +76,7 @@ const getFullBoard = async (boardId) => {
   }
 }
 
-export const BoardModel = { 
+export const BoardModel = {
   createNew,
   pushColumnOrder,
   getFullBoard
