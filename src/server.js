@@ -27,7 +27,7 @@ const bootServer = () => {
     res.end('<h1>Hello world! Nuan dev</h1> <br/>')
   })
 
-  app.listen(env.APP_PORT, env.APP_HOST, (err, res) => {
+  app.listen(env.APP_PORT, env.APP_HOST, () => {
     console.log('RESTful API server started on: ' + env.APP_PORT )
   })
 }
