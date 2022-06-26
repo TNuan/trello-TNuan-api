@@ -5,8 +5,8 @@ import { getDB } from '*/config/mongodb'
 //Degine Card Collection
 const cardCollectionName = 'cards'
 const cardCollectionSchema = Joi.object({
-  boardId: Joi.string().required(),// Also ObjectId when create new 
-  columnId: Joi.string().required(),// Also ObjectId when create new 
+  boardId: Joi.string().required(), // Also ObjectId when create new
+  columnId: Joi.string().required(), // Also ObjectId when create new
   title: Joi.string().required().min(3).max(30).trim(),
   cover: Joi.string().default(null),
   createdAt: Joi.date().timestamp().default(Date.now()),
@@ -24,7 +24,7 @@ const createNew = async (data) => {
     const insertValue = {
       ...validatedValue,
       boardId: ObjectId(validatedValue.boardId),
-      columnId: ObjectId(validatedValue.columnId)   
+      columnId: ObjectId(validatedValue.columnId)
     }
     await getDB().collection(cardCollectionName).insertOne(insertValue)
     return insertValue
@@ -33,7 +33,7 @@ const createNew = async (data) => {
   }
 }
 
-export const CardModel = { 
+export const CardModel = {
   cardCollectionName,
-  createNew 
+  createNew
 }

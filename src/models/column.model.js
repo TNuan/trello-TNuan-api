@@ -5,7 +5,7 @@ import { getDB } from '*/config/mongodb'
 //Degine Column Collection
 const columnCollectionName = 'columns'
 const columnCollectionSchema = Joi.object({
-  boardId: Joi.string().required(), // Also ObjectId when create new 
+  boardId: Joi.string().required(), // Also ObjectId when create new
   title: Joi.string().required().min(3).max(20).trim(),
   cardOrder: Joi.array().items(Joi.string()).default([]),
   createdAt: Joi.date().timestamp().default(Date.now()),
@@ -33,11 +33,11 @@ const createNew = async (data) => {
 }
 
 /**
- * 
- * @param {string} columnId 
- * @param {string} cardId 
+ *
+ * @param {string} columnId
+ * @param {string} cardId
  */
- const pushCardOrder = async (columnId, cardId) => {
+const pushCardOrder = async (columnId, cardId) => {
   try {
     const result = await getDB().collection(columnCollectionName).findOneAndUpdate(
       { _id: ObjectId(columnId) },

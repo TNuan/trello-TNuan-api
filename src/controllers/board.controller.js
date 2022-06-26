@@ -27,7 +27,7 @@ const getFullBoard = async (req, res) => {
   }
 }
 
-export const BoardController = { 
-  createNew, 
-  getFullBoard 
+export const BoardController = {
+  createNew,
+  getFullBoard
 }
