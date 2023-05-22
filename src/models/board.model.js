@@ -8,6 +8,7 @@ import { CardModel } from './card.model'
 const boardCollectionName = 'boards'
 const boardCollectionSchema = Joi.object({
   title: Joi.string().required().min(3).max(20).trim(),
+  userOrder: Joi.array().items(Joi.string()).default([]),
   columnOrder: Joi.array().items(Joi.string()).default([]),
   createdAt: Joi.date().timestamp().default(Date.now()),
   updatedAt: Joi.date().timestamp().default(null),
@@ -62,6 +63,26 @@ const pushColumnOrder = async (boardId, columnId) => {
   }
 }
 
+/**
+ *
+ * @param {string} boardId
+ * @param {string} userId
+ */
+const pushUserOrder = async (boardId, userId) => {
+  try {
+    const result = await getDB().collection(boardCollectionName).findOneAndUpdate(
+      { _id: ObjectId(boardId) },
+      { $push: { userOrder: userId } },
+      { returnOriginal: false }
+    )
+
+    return result.value
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
+
 const getFullBoard = async (boardId) => {
   try {
     const result = await getDB().collection(boardCollectionName).aggregate([
@@ -92,6 +113,7 @@ const getFullBoard = async (boardId) => {
 export const BoardModel = {
   createNew,
   pushColumnOrder,
+  pushUserOrder,
   getFullBoard,
   update
 }

@@ -31,7 +31,7 @@ const update = async (id, data) => {
   }
 }
 
-export const CardService = { 
+export const CardService = {
   createNew,
-  update 
+  update
 }
