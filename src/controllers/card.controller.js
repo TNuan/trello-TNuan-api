@@ -26,7 +26,7 @@ const update = async (req, res) => {
   }
 }
 
-export const CardController = { 
+export const CardController = {
   createNew,
-  update 
+  update
 }
