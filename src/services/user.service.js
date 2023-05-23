@@ -33,10 +33,10 @@ const login = async (data) => {
     const { username, password } = data
     // Check user
     const user = await UserModel.findOne({ username })
-    if (!user) return { msg: 'Incorrect username or password', status: false }
+    if (!user) return { msg: 'Incorrect username', status: false }
     // Check Password
     const isPasswordValid = await bcrypt.compare(password, user.password)
-    if (!isPasswordValid) return { msg: 'Incorrect username or password', status: false }
+    if (!isPasswordValid) return { msg: 'Incorrect password', status: false }
     delete user.password
   } catch (err) {
     throw new Error(err)

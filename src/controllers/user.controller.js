@@ -26,10 +26,10 @@ const login = async (req, res) => {
   }
 }
 
-const getFullBoard = async (req, res) => {
+const getAllBoard = async (req, res) => {
   try {
     const { id } = req.params
-    const result = await UserService.getFullBoard(id)
+    const result = await UserService.getAllBoard(id)
     res.status(HttpStatusCode.OK).json(result)
   } catch (err) {
     console.error(err)
@@ -51,9 +51,9 @@ const update = async (req, res) => {
   }
 }
 
-export const BoardController = {
+export const UserController = {
   register,
   login,
-  getFullBoard,
+  getAllBoard,
   update
 }

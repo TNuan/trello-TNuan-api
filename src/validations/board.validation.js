@@ -34,7 +34,7 @@ const update = async (req, res, next) => {
 }
 
 
-export const BoardValidation = { 
-  createNew, 
-  update 
+export const BoardValidation = {
+  createNew,
+  update
 }

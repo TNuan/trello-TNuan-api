@@ -8,19 +8,19 @@ const userCollectionName = 'users'
 const userCollectionSchema = Joi.object({
   username: Joi.string().alphanum().min(3).max(30).required(),
   email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
-  password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+  password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
   repeat_password: Joi.ref('password'),
-  access_token: [
-    Joi.string(),
-    Joi.number()
-  ],
+  // access_token: [
+  //   Joi.string(),
+  //   Joi.number()
+  // ],
   boardOrder: Joi.array().items(Joi.string().default([])),
   createdAt: Joi.date().timestamp().default(Date.now()),
-  updatedAt: Joi.date().timestamp().default(null),
+  updatedAt: Joi.date().timestamp().default(null)
 })
-  .with('username', 'birth_year')
-  .xor('password', 'access_token')
-  .with('password', 'repeat_password')
+  // .with('username', 'birth_year')
+  // // .xor('password', 'access_token')
+  // .with('password', 'repeat_password')
 
 const validateSchema = async (data) => {
   return await userCollectionSchema.validateAsync(data, { abortEarly: false })
@@ -36,19 +36,15 @@ const createNew = async (data) => {
   }
 }
 
-const update = async (id, data) => {
+const findOne = async (username) => {
   try {
-    const updateData = { ...data }
-    const result = await getDB().collection(userCollectionName).findOneAndUpdate(
-      { _id: ObjectId(id) },
-      { $set: updateData },
-      { returnOriginal: false }
-    )
-    return result.value
+    const result = await getDB().collection(userCollectionName).findOne({ username })
+    return result
   } catch (err) {
     throw new Error(err)
   }
 }
+
 
 /**
  * @param {string} userId
@@ -93,6 +89,6 @@ const getAllBoard = async (userId) => {
 export const UserModel = {
   createNew,
   pushBoardOrder,
-  getAllBoard,
-  update
+  findOne,
+  getAllBoard
 }
