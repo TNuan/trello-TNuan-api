@@ -33,12 +33,13 @@ const login = async (data) => {
   try {
     const { username, password } = data
     // Check user
-    const user = await UserModel.findOne({ username })
+    const user = await UserModel.findOne(username)
     if (!user) return { msg: 'Incorrect username', status: false }
     // Check Password
     const isPasswordValid = await compare(password, user.password)
     if (!isPasswordValid) return { msg: 'Incorrect password', status: false }
     delete user.password
+    return { status: true, user }
   } catch (err) {
     throw new Error(err)
   }

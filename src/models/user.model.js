@@ -10,17 +10,10 @@ const userCollectionSchema = Joi.object({
   email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
   password: Joi.string().min(8).required(),
   repeat_password: Joi.ref('password'),
-  // access_token: [
-  //   Joi.string(),
-  //   Joi.number()
-  // ],
   boardOrder: Joi.array().items(Joi.string().default([])),
   createdAt: Joi.date().timestamp().default(Date.now()),
   updatedAt: Joi.date().timestamp().default(null)
 })
-  // .with('username', 'birth_year')
-  // // .xor('password', 'access_token')
-  // .with('password', 'repeat_password')
 
 const validateSchema = async (data) => {
   return await userCollectionSchema.validateAsync(data, { abortEarly: false })
@@ -36,9 +29,9 @@ const createNew = async (data) => {
   }
 }
 
-const findOne = async (username) => {
+const findOne = async (data) => {
   try {
-    const result = await getDB().collection(userCollectionName).findOne({ username })
+    const result = await getDB().collection(userCollectionName).findOne({ 'username': data })
     return result
   } catch (err) {
     throw new Error(err)
