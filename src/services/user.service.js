@@ -1,17 +1,18 @@
 import { UserModel } from '*/models/user.model'
 import { cloneDeep } from 'lodash'
-import { bcrypt } from 'bcrypt'
+import { hash, compare } from 'bcrypt'
 // import { HttpStatusCode } from '*/utilities/constants'
 
 const register = async (data) => {
   try {
     const { username, email, password } = data
+    console.log(data)
     const usernameCheck = await UserModel.findOne({ username })
     if (usernameCheck) return { msg: 'User already used', status: false }
     const emailCheck = await UserModel.findOne({ email })
     if (emailCheck) return { msg: 'Email already used', status: false }
 
-    const hashedPassword = await bcrypt.hash(password, 10)
+    const hashedPassword = await hash(password, 10)
     const user = await UserModel.createNew({
       username,
       email,
@@ -32,12 +33,13 @@ const login = async (data) => {
   try {
     const { username, password } = data
     // Check user
-    const user = await UserModel.findOne({ username })
-    if (!user) return { msg: 'Incorrect username or password', status: false }
+    const user = await UserModel.findOne(username)
+    if (!user) return { msg: 'Incorrect username', status: false }
     // Check Password
-    const isPasswordValid = await bcrypt.compare(password, user.password)
-    if (!isPasswordValid) return { msg: 'Incorrect username or password', status: false }
+    const isPasswordValid = await compare(password, user.password)
+    if (!isPasswordValid) return { msg: 'Incorrect password', status: false }
     delete user.password
+    return { status: true, user }
   } catch (err) {
     throw new Error(err)
   }
