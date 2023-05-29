@@ -57,7 +57,6 @@ const getAllBoard = async (userId) => {
     // Filter deleted boards
     transformUser.boards = transformUser.boards.filter(board => !board._destroy)
 
-    //
     return transformUser
   } catch (err) {
     console.error(err)
@@ -65,26 +64,8 @@ const getAllBoard = async (userId) => {
   }
 }
 
-const update = async (id, data) => {
-  try {
-    const updateData = {
-      ...data,
-      updatedAt: Date.now()
-    }
-    if (updateData._id) delete updateData._id
-    if (updateData.boards) delete updateData.boards
-
-    const updatedUser = await UserModel.update(id, updateData)
-
-    return updatedUser
-  } catch (err) {
-    throw new Error(err)
-  }
-}
-
 export const UserService = {
   register,
   login,
-  getAllBoard,
-  update
+  getAllBoard
 }
