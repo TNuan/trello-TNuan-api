@@ -6,10 +6,9 @@ import { hash, compare } from 'bcrypt'
 const register = async (data) => {
   try {
     const { username, email, password } = data
-    console.log(data)
-    const usernameCheck = await UserModel.findOne({ username })
+    const usernameCheck = await UserModel.findOne(username)
     if (usernameCheck) return { msg: 'User already used', status: false }
-    const emailCheck = await UserModel.findOne({ email })
+    const emailCheck = await UserModel.findOne(email)
     if (emailCheck) return { msg: 'Email already used', status: false }
 
     const hashedPassword = await hash(password, 10)
@@ -19,11 +18,8 @@ const register = async (data) => {
       password: hashedPassword
     })
     delete user.password
-    // push notifications
-    // do something ...
-    // transform data
 
-    return user
+    return { status: true, user }
   } catch (err) {
     throw new Error(err)
   }

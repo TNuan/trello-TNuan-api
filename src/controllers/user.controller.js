@@ -4,7 +4,6 @@ import { HttpStatusCode } from '*/utilities/constants'
 const register = async (req, res) => {
   try {
     const result = await UserService.register(req.body)
-
     res.status(HttpStatusCode.OK).json(result)
   } catch (err) {
     console.error(err)
