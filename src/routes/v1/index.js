@@ -32,4 +32,9 @@ router.use('/columns', columnRoutes)
  */
 router.use('/cards', cardRoutes)
 
+/**
+ * Test API
+ */
+// router.use('/tests', testRoutes)
+
 export const apiV1 = router
