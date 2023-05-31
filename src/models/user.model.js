@@ -38,6 +38,15 @@ const findOne = async (data) => {
   }
 }
 
+const findById = async (data) => {
+  try {
+    const result = await getDB().collection(userCollectionName).findOne({ _id: ObjectId(data) })
+    return result
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
 
 /**
  * @param {string} userId
@@ -83,5 +92,6 @@ export const UserModel = {
   createNew,
   pushBoardOrder,
   findOne,
+  findById,
   getAllBoard
 }

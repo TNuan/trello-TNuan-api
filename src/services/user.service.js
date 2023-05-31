@@ -1,7 +1,18 @@
 import { UserModel } from '*/models/user.model'
 import { cloneDeep } from 'lodash'
 import { hash, compare } from 'bcrypt'
+import { sign, verify } from 'jsonwebtoken'
+import { env } from '../config/environment'
 // import { HttpStatusCode } from '*/utilities/constants'
+
+const encodeToken = (userId) => {
+  return sign({
+    iss: 'TNuan',
+    sub: userId,
+    iat: new Date().getTime(),
+    exp: new Date().setDate(new Date().getDate() + 7)
+  }, env.JWT_SECRET)
+}
 
 const register = async (data) => {
   try {
@@ -17,9 +28,13 @@ const register = async (data) => {
       email,
       password: hashedPassword
     })
+
+    // Encode a token
+    const token = encodeToken(user.insertedId)
+
     delete user.password
 
-    return { status: true, user }
+    return { status: true, token }
   } catch (err) {
     throw new Error(err)
   }
@@ -34,8 +49,12 @@ const login = async (data) => {
     // Check Password
     const isPasswordValid = await compare(password, user.password)
     if (!isPasswordValid) return { msg: 'Incorrect password', status: false }
+
+    // Encode a token
+    const token = encodeToken(user.insertedId)
+
     delete user.password
-    return { status: true, user }
+    return { status: true, user, token }
   } catch (err) {
     throw new Error(err)
   }
