@@ -33,7 +33,6 @@ const register = async (data) => {
     const token = encodeToken(user.insertedId)
 
     delete user.password
-
     return { status: true, token }
   } catch (err) {
     throw new Error(err)
