@@ -8,8 +8,11 @@ const userCollectionName = 'users'
 const userCollectionSchema = Joi.object({
   username: Joi.string().alphanum().min(3).max(30).required(),
   email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
-  password: Joi.string().min(8).required(),
+  password: Joi.string().min(8),
   repeat_password: Joi.ref('password'),
+  authType: Joi.string().valid('local', 'facebook', 'google').default('local'),
+  authGoogleID: Joi.string().default(null),
+  authFacebookID: Joi.string().default(null),
   boardOrder: Joi.array().items(Joi.string().default([])),
   createdAt: Joi.date().timestamp().default(Date.now()),
   updatedAt: Joi.date().timestamp().default(null)
@@ -31,7 +34,7 @@ const createNew = async (data) => {
 
 const findOne = async (data) => {
   try {
-    const result = await getDB().collection(userCollectionName).findOne({ 'username': data })
+    const result = await getDB().collection(userCollectionName).findOne(data)
     return result
   } catch (err) {
     throw new Error(err)

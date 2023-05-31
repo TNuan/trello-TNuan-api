@@ -17,9 +17,9 @@ const encodeToken = (userId) => {
 const register = async (data) => {
   try {
     const { username, email, password } = data
-    const usernameCheck = await UserModel.findOne(username)
+    const usernameCheck = await UserModel.findOne({ username: username })
     if (usernameCheck) return { msg: 'User already used', status: false }
-    const emailCheck = await UserModel.findOne(email)
+    const emailCheck = await UserModel.findOne({ email: email })
     if (emailCheck) return { msg: 'Email already used', status: false }
 
     const hashedPassword = await hash(password, 10)
@@ -44,7 +44,7 @@ const login = async (data) => {
   try {
     const { username, password } = data
     // Check user
-    const user = await UserModel.findOne(username)
+    const user = await UserModel.findOne({ username: username })
     if (!user) return { msg: 'Incorrect username', status: false }
     // Check Password
     const isPasswordValid = await compare(password, user.password)

@@ -4,8 +4,10 @@ import { env } from '../config/environment'
 import { UserModel } from '../models/user.model'
 import { compare } from 'bcrypt'
 import { Strategy as LocalStrategy } from 'passport-local'
+import GooglePlusTokenStrategy from 'passport-google-plus-token'
 
-export const passportConfig = passport.use(new Strategy({
+// Passport configuration
+passport.use(new Strategy({
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken('Authorization'),
   secretOrKey: env.JWT_SECRET
 }, async (payload, done) => {
@@ -22,7 +24,7 @@ export const passportConfig = passport.use(new Strategy({
 }))
 
 // Passport Local
-export const passportLocal = passport.use(new LocalStrategy({
+passport.use(new LocalStrategy({
   usernameField: 'username'
 }, async (username, password, done) => {
   try {
@@ -33,6 +35,21 @@ export const passportLocal = passport.use(new LocalStrategy({
     if (!isPasswordValid) return done(null, false)
 
     done(null, user)
+  } catch (err) {
+    done(err, false)
+  }
+}))
+
+// Passport Google
+passport.use(new GooglePlusTokenStrategy({
+  clientID: '442665719023-tt0o0rmo65dhaqs86n48nhubbjtfsplq.apps.googleusercontent.com',
+  clientSecret: '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',
+  passReqToCallback: true
+}, async (req, accessToken, refreshToken, profile, done) => {
+  try {
+    console.log('accessToken: ', accessToken)
+    console.log('refreshToken: ', refreshToken)
+    console.log('profile: ', profile)
   } catch (err) {
     done(err, false)
   }

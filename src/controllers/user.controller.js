@@ -13,6 +13,10 @@ const register = async (req, res) => {
   }
 }
 
+const authGoogle = async (req, res) => {
+  console.log('authGoogle', req.user)
+}
+
 const login = async (req, res) => {
   try {
     const result = await UserService.login(req.body)
@@ -40,6 +44,7 @@ const getAllBoard = async (req, res) => {
 
 export const UserController = {
   register,
+  authGoogle,
   login,
   getAllBoard
 }
