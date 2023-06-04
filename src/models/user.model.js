@@ -74,15 +74,14 @@ const getAllBoard = async (userId) => {
   try {
     const result = await getDB().collection(userCollectionName).aggregate([
       { $match: {
-        _id: ObjectId(userId),
-        // _destroy: false
+        _id: ObjectId(userId)
       } },
       { $lookup: {
         from: BoardModel.boardCollectionName, // collection name
         localField: '_id',
-        foreignField: 'boardId',
-        as: 'columns'
-      } },
+        foreignField: 'userId',
+        as: 'boards'
+      } }
     ]).toArray()
 
     return result[0] || {}
