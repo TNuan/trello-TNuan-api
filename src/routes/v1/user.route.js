@@ -14,6 +14,9 @@ router.route('/login')
   .post(UserValidation.login, passport.authenticate('local', { session: false }), UserController.login)
 
 router.route('/auth/google')
-  .post(passport.authenticate('google-plus-token'), UserController.authGoogle)
+  .post(passport.authenticate('google-plus-token', { session: false }), UserController.authGoogle)
+
+router.route('/auth/facebook')
+  .post(passport.authenticate('facebook-token', { session: false }), UserController.authFacebook)
 
 export const userRoutes = router

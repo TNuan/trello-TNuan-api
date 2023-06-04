@@ -66,7 +66,7 @@ const getAllBoard = async (userId) => {
     if (!user || !user.boards) {
       throw new Error('Board not found!')
     }
-
+    
     const transformUser = cloneDeep(user)
     // Filter deleted boards
     transformUser.boards = transformUser.boards.filter(board => !board._destroy)
