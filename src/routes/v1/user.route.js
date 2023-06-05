@@ -8,7 +8,7 @@ import '../../middlewares/passport'
 const router = express.Router()
 
 router.route('/register')
-  .post(UserValidation.register, passport.authenticate('jwt', { session: false }), UserController.register)
+  .post(UserValidation.register, UserController.register)
 
 router.route('/login')
   .post(UserValidation.login, passport.authenticate('local', { session: false }), UserController.login)
@@ -19,4 +19,6 @@ router.route('/auth/google')
 router.route('/auth/facebook')
   .post(passport.authenticate('facebook-token', { session: false }), UserController.authFacebook)
 
+router.route('/secret')
+  .get(passport.authenticate('jwt', { session: false }), UserController.secret)
 export const userRoutes = router
