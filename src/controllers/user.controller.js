@@ -3,10 +3,11 @@ import { HttpStatusCode } from '*/utilities/constants'
 
 const register = async (req, res) => {
   try {
-    console.log(req.body)
     const result = await UserService.register(req.body)
-    res.setHeader('Authorization', `Bearer ${result.token}`)
-    res.status(HttpStatusCode.OK).json({ status: result.status })
+    if (result.status === true) {
+      res.setHeader('Authorization', result.token)
+    }
+    res.status(HttpStatusCode.OK).json(result)
   } catch (err) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json({
       errors: err.message
@@ -29,8 +30,10 @@ const secret = async (req, res) => {
 const login = async (req, res) => {
   try {
     const result = await UserService.login(req.body)
-    res.setHeader('Authorization', result.token)
-    res.status(HttpStatusCode.OK).json({ status: result.status })
+    if (result.status === true) {
+      res.setHeader('Authorization', result.token)
+    }
+    res.status(HttpStatusCode.OK).json(result)
   } catch (err) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json({
       errors: err.message
