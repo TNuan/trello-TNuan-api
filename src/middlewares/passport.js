@@ -14,9 +14,9 @@ passport.use(new JwtStrategy({
 }, async (payload, done) => {
   try {
     console.log(payload)
-    const user = await UserModel.findOne({ id: payload.sub })
+    const user = await UserModel.findById(payload.sub)
 
-    if (user) return done(null, false)
+    if (!user) return done(null, false)
 
     done(null, user)
   } catch (err) {
