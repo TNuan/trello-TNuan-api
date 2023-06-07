@@ -79,7 +79,7 @@ const getAllBoard = async (userId) => {
       { $lookup: {
         from: BoardModel.boardCollectionName, // collection name
         localField: '_id',
-        foreignField: 'userId',
+        foreignField: 'author',
         as: 'boards'
       } }
     ]).toArray()

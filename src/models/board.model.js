@@ -116,6 +116,7 @@ const getFullBoard = async (boardId) => {
 }
 
 export const BoardModel = {
+  boardCollectionName,
   createNew,
   pushColumnOrder,
   pushUserOrder,

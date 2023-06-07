@@ -31,7 +31,7 @@ const getFullBoard = async (boardId) => {
     transformBoard.columns.forEach(column => {
       column.cards = transformBoard.cards.filter(c => c.columnId.toString() === column._id.toString())
     })
-    // Sort columns by column order, sort cards by card order ====> This step will pass to front end dev :V
+    // Sort columns by column order, sort cards by card order ====> This step will pass to front end dev
 
     // Remove cards data from boards
     delete transformBoard.cards
