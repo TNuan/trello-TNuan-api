@@ -21,4 +21,8 @@ router.route('/auth/facebook')
 
 router.route('/secret')
   .get(passport.authenticate('jwt', { session: false }), UserController.secret)
+
+router.route('/:id/getDashBoard')
+  .get(UserController.getAllBoard)
+
 export const userRoutes = router

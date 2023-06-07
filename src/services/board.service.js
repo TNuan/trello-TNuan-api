@@ -1,14 +1,15 @@
 import { BoardModel } from '*/models/board.model'
 import { cloneDeep } from 'lodash'
+import { UserModel } from '../models/user.model'
 
 const createNew = async (data) => {
   try {
-    const result = await BoardModel.createNew(data)
-    // push notifications
-    // do something ...
-    // transform data
 
-    return result
+    const newBoard = await BoardModel.createNew(data)
+
+    await UserModel.pushBoardOrder(newBoard.author.toString(), newBoard._id.toString())
+    await BoardModel.pushUserOrder(newBoard._id.toString(), newBoard.author.toString())
+    return newBoard
   } catch (err) {
     throw new Error(err)
   }

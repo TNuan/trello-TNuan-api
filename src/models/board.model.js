@@ -8,6 +8,7 @@ import { CardModel } from './card.model'
 const boardCollectionName = 'boards'
 const boardCollectionSchema = Joi.object({
   title: Joi.string().required().min(3).max(20).trim(),
+  author: Joi.string().required(),
   userOrder: Joi.array().items(Joi.string()).default([]),
   columnOrder: Joi.array().items(Joi.string()).default([]),
   createdAt: Joi.date().timestamp().default(Date.now()),
@@ -21,9 +22,13 @@ const validateSchema = async (data) => {
 
 const createNew = async (data) => {
   try {
-    const value = await validateSchema(data)
-    const result = await getDB().collection(boardCollectionName).insertOne(value)
-    return result
+    const validatedValue = await validateSchema(data)
+    const insertValue = {
+      ...validatedValue,
+      author: ObjectId(validatedValue.author)
+    }
+    await getDB().collection(boardCollectionName).insertOne(insertValue)
+    return insertValue
   } catch (err) {
     throw new Error(err)
   }
