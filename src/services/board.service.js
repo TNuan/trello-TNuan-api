@@ -1,14 +1,15 @@
 import { BoardModel } from '*/models/board.model'
 import { cloneDeep } from 'lodash'
+import { UserModel } from '../models/user.model'
 
 const createNew = async (data) => {
   try {
-    const result = await BoardModel.createNew(data)
-    // push notifications
-    // do something ...
-    // transform data
 
-    return result
+    const newBoard = await BoardModel.createNew(data)
+
+    await UserModel.pushBoardOrder(newBoard.author.toString(), newBoard._id.toString())
+    await BoardModel.pushUserOrder(newBoard._id.toString(), newBoard.author.toString())
+    return newBoard
   } catch (err) {
     throw new Error(err)
   }
@@ -30,7 +31,7 @@ const getFullBoard = async (boardId) => {
     transformBoard.columns.forEach(column => {
       column.cards = transformBoard.cards.filter(c => c.columnId.toString() === column._id.toString())
     })
-    // Sort columns by column order, sort cards by card order ====> This step will pass to front end dev :V
+    // Sort columns by column order, sort cards by card order ====> This step will pass to front end dev
 
     // Remove cards data from boards
     delete transformBoard.cards

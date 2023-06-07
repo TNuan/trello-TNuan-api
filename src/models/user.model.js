@@ -13,7 +13,7 @@ const userCollectionSchema = Joi.object({
   authType: Joi.string().valid('local', 'facebook', 'google').default('local'),
   authGoogleID: Joi.string().default(null),
   authFacebookID: Joi.string().default(null),
-  boardOrder: Joi.array().items(Joi.string().default([])),
+  boardOrder: Joi.array().items(Joi.string()).default([]),
   createdAt: Joi.date().timestamp().default(Date.now()),
   updatedAt: Joi.date().timestamp().default(null)
 })
@@ -79,7 +79,7 @@ const getAllBoard = async (userId) => {
       { $lookup: {
         from: BoardModel.boardCollectionName, // collection name
         localField: '_id',
-        foreignField: 'userId',
+        foreignField: 'author',
         as: 'boards'
       } }
     ]).toArray()
