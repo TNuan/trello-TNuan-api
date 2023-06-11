@@ -42,7 +42,7 @@ const update = async (id, data) => {
     const result = await getDB().collection(cardCollectionName).findOneAndUpdate(
       { _id: ObjectId(id) },
       { $set: updateData },
-      { returnOriginal: false }
+      { returnDocument: 'after' }
     )
     return result.value
   } catch (err) {

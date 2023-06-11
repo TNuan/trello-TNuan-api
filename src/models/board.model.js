@@ -9,6 +9,7 @@ const boardCollectionName = 'boards'
 const boardCollectionSchema = Joi.object({
   title: Joi.string().required().min(3).max(20).trim(),
   author: Joi.string().required(),
+  workspaceId: Joi.string().required(),
   userOrder: Joi.array().items(Joi.string()).default([]),
   columnOrder: Joi.array().items(Joi.string()).default([]),
   createdAt: Joi.date().timestamp().default(Date.now()),
@@ -25,6 +26,7 @@ const createNew = async (data) => {
     const validatedValue = await validateSchema(data)
     const insertValue = {
       ...validatedValue,
+      workspaceId: ObjectId(validatedValue.workspaceId),
       author: ObjectId(validatedValue.author)
     }
     await getDB().collection(boardCollectionName).insertOne(insertValue)
@@ -40,14 +42,13 @@ const update = async (id, data) => {
     const result = await getDB().collection(boardCollectionName).findOneAndUpdate(
       { _id: ObjectId(id) },
       { $set: updateData },
-      { returnOriginal: false }
+      { returnDocument: 'after' }
     )
     return result.value
   } catch (err) {
     throw new Error(err)
   }
 }
-
 
 /**
  *
@@ -59,7 +60,7 @@ const pushColumnOrder = async (boardId, columnId) => {
     const result = await getDB().collection(boardCollectionName).findOneAndUpdate(
       { _id: ObjectId(boardId) },
       { $push: { columnOrder: columnId } },
-      { returnOriginal: false }
+      { returnDocument: 'after' }
     )
 
     return result.value
@@ -78,7 +79,7 @@ const pushUserOrder = async (boardId, userId) => {
     const result = await getDB().collection(boardCollectionName).findOneAndUpdate(
       { _id: ObjectId(boardId) },
       { $push: { userOrder: userId } },
-      { returnOriginal: false }
+      { returnDocument: 'after' }
     )
 
     return result.value

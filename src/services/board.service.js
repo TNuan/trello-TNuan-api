@@ -1,13 +1,13 @@
 import { BoardModel } from '*/models/board.model'
-import { cloneDeep } from 'lodash'
 import { UserModel } from '../models/user.model'
+import { WorkspaceModel } from '../models/workspace.model'
+import { cloneDeep } from 'lodash'
 
 const createNew = async (data) => {
   try {
-
     const newBoard = await BoardModel.createNew(data)
-
     await UserModel.pushBoardOrder(newBoard.author.toString(), newBoard._id.toString())
+    await WorkspaceModel.pushBoardOrder(newBoard.workspaceId.toString(), newBoard._id.toString())
     await BoardModel.pushUserOrder(newBoard._id.toString(), newBoard.author.toString())
     return newBoard
   } catch (err) {
@@ -51,6 +51,7 @@ const update = async (id, data) => {
     }
     if (updateData._id) delete updateData._id
     if (updateData.columns) delete updateData.columns
+    if (updateData.users) delete updateData.users
 
     const updatedBoard = await BoardModel.update(id, updateData)
 

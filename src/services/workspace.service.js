@@ -14,7 +14,7 @@ const createNew = async (data) => {
   }
 }
 
-const getFullWorkspace = async (userId, workspaceId) => {
+const getFullWorkspace = async (workspaceId, data) => {
   try {
     const workspace = await WorkspaceModel.getFullWorkspace(workspaceId)
 
@@ -24,10 +24,10 @@ const getFullWorkspace = async (userId, workspaceId) => {
 
     const transformWorkspace = cloneDeep(workspace)
     // Filter deleted boards
-    if ( userId === transformWorkspace.author ) {
+    if ( data.userId === transformWorkspace.author ) {
       transformWorkspace.boards = transformWorkspace.boards.filter(board => !board._destroy)
     } else {
-      transformWorkspace.boards = transformWorkspace.boards.filter(board => board.userOrder.find(id => id === userId) && !board._destroy)
+      transformWorkspace.boards = transformWorkspace.boards.filter(board => board.userOrder.find(id => id === data.userId) && !board._destroy)
     }
 
     return transformWorkspace
@@ -37,7 +37,26 @@ const getFullWorkspace = async (userId, workspaceId) => {
   }
 }
 
+const update = async (id, data) => {
+  try {
+    const updateData = {
+      ...data,
+      updatedAt: Date.now()
+    }
+    if (updateData._id) delete updateData._id
+    if (updateData.members) delete updateData.memebers
+
+    const updatedWorkspace = await WorkspaceModel.update(id, updateData)
+
+    return updatedWorkspace
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
+
 export const WorkspaceService = {
   createNew,
+  update,
   getFullWorkspace
 }

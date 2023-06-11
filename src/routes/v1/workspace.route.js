@@ -9,5 +9,6 @@ router.route('/')
 
 router.route('/:id')
   .get(WorkspaceController.getFullWorkspace)
+  .put(WorkspaceValidation.update, WorkspaceController.update)
 
 export const workspaceRoutes = router
