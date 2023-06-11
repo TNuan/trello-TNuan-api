@@ -1,13 +1,15 @@
 import { BoardModel } from '*/models/board.model'
-import { cloneDeep } from 'lodash'
 import { UserModel } from '../models/user.model'
+import { WorkspaceModel } from '../models/workspace.model'
+import { cloneDeep } from 'lodash'
 
 const createNew = async (data) => {
   try {
-
+    console.log(data)
     const newBoard = await BoardModel.createNew(data)
-
+    console.log(newBoard)
     await UserModel.pushBoardOrder(newBoard.author.toString(), newBoard._id.toString())
+    await WorkspaceModel.pushBoardOrder(newBoard.workspaceId.toString(), newBoard._id.toString())
     await BoardModel.pushUserOrder(newBoard._id.toString(), newBoard.author.toString())
     return newBoard
   } catch (err) {

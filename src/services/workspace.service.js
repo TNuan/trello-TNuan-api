@@ -14,7 +14,7 @@ const createNew = async (data) => {
   }
 }
 
-const getFullWorkspace = async (userId, workspaceId) => {
+const getFullWorkspace = async (workspaceId, userId) => {
   try {
     const workspace = await WorkspaceModel.getFullWorkspace(workspaceId)
 

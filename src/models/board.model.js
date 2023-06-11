@@ -9,6 +9,7 @@ const boardCollectionName = 'boards'
 const boardCollectionSchema = Joi.object({
   title: Joi.string().required().min(3).max(20).trim(),
   author: Joi.string().required(),
+  workspaceId: Joi.string().required(),
   userOrder: Joi.array().items(Joi.string()).default([]),
   columnOrder: Joi.array().items(Joi.string()).default([]),
   createdAt: Joi.date().timestamp().default(Date.now()),
@@ -25,6 +26,7 @@ const createNew = async (data) => {
     const validatedValue = await validateSchema(data)
     const insertValue = {
       ...validatedValue,
+      workspaceId: ObjectId(validatedValue.workspaceId),
       author: ObjectId(validatedValue.author)
     }
     await getDB().collection(boardCollectionName).insertOne(insertValue)
