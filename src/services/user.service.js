@@ -1,4 +1,5 @@
 import { UserModel } from '*/models/user.model'
+import { WorkspaceService } from './workspace.service'
 import { cloneDeep } from 'lodash'
 import { hash, compare } from 'bcrypt'
 import { sign, verify } from 'jsonwebtoken'
@@ -29,6 +30,10 @@ const register = async (data) => {
       password: hashedPassword
     })
 
+    WorkspaceService.createNew({
+      title: 'Workspace',
+      author: user.insertedId.toString()
+    })
     // Encode a token
     const token = encodeToken(user.insertedId)
 
@@ -70,7 +75,7 @@ const getAllBoard = async (userId) => {
     // Filter deleted boards
     transformUser.boards = transformUser.boards.filter(board => !board._destroy)
 
-    return transformUser
+    return transformUser.boards
   } catch (err) {
     console.error(err)
     throw new Error(err)

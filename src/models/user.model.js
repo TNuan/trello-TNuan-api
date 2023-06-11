@@ -14,6 +14,7 @@ const userCollectionSchema = Joi.object({
   authGoogleID: Joi.string().default(null),
   authFacebookID: Joi.string().default(null),
   boardOrder: Joi.array().items(Joi.string()).default([]),
+  workspaceOrder: Joi.array().items(Joi.string()).default([]),
   createdAt: Joi.date().timestamp().default(Date.now()),
   updatedAt: Joi.date().timestamp().default(null)
 })
@@ -70,6 +71,26 @@ const pushBoardOrder = async (userId, boardId) => {
   }
 }
 
+
+/**
+ * @param {string} userId
+ * @param {string} workspaceId
+ * @returns
+ */
+const pushWorkspaceOrder = async (userId, workspaceId) => {
+  try {
+    const result = await getDB().collection(userCollectionName).findOneAndUpdate(
+      { _id: ObjectId(userId) },
+      { $push: { workspaceOrder: workspaceId } },
+      { returnOriginal: false }
+    )
+
+    return result.value
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
 const getAllBoard = async (userId) => {
   try {
     const result = await getDB().collection(userCollectionName).aggregate([
@@ -93,7 +114,9 @@ const getAllBoard = async (userId) => {
 export const UserModel = {
   createNew,
   pushBoardOrder,
+  pushWorkspaceOrder,
   findOne,
   findById,
-  getAllBoard
+  getAllBoard,
+  userCollectionName
 }

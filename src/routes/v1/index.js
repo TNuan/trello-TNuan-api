@@ -4,6 +4,7 @@ import { boardRoutes } from './board.route'
 import { columnRoutes } from './column.route'
 import { cardRoutes } from './card.route'
 import { userRoutes } from './user.route'
+import { workspaceRoutes } from './workspace.route'
 
 const router = express.Router()
 
@@ -16,6 +17,11 @@ router.get('/status', (req, res) => res.status(HttpStatusCode.OK).json({ status:
  * User APIs
  */
 router.use('/users', userRoutes)
+
+/**
+ * Workspace APIs
+ */
+router.use('/workspaces', workspaceRoutes)
 
 /**
  * Board APIs
