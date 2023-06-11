@@ -41,10 +41,10 @@ const login = async (req, res) => {
   }
 }
 
-const getAllBoard = async (req, res) => {
+const getUser = async (req, res) => {
   try {
     const { id } = req.params
-    const result = await UserService.getAllBoard(id)
+    const result = await UserService.getUser(id)
     res.status(HttpStatusCode.OK).json(result)
   } catch (err) {
     console.error(err)
@@ -60,5 +60,5 @@ export const UserController = {
   authFacebook,
   login,
   secret,
-  getAllBoard
+  getUser
 }
