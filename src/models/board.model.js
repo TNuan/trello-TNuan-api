@@ -42,14 +42,13 @@ const update = async (id, data) => {
     const result = await getDB().collection(boardCollectionName).findOneAndUpdate(
       { _id: ObjectId(id) },
       { $set: updateData },
-      { returnOriginal: false }
+      { returnDocument: 'after' }
     )
     return result.value
   } catch (err) {
     throw new Error(err)
   }
 }
-
 
 /**
  *
@@ -61,7 +60,7 @@ const pushColumnOrder = async (boardId, columnId) => {
     const result = await getDB().collection(boardCollectionName).findOneAndUpdate(
       { _id: ObjectId(boardId) },
       { $push: { columnOrder: columnId } },
-      { returnOriginal: false }
+      { returnDocument: 'after' }
     )
 
     return result.value
@@ -80,7 +79,7 @@ const pushUserOrder = async (boardId, userId) => {
     const result = await getDB().collection(boardCollectionName).findOneAndUpdate(
       { _id: ObjectId(boardId) },
       { $push: { userOrder: userId } },
-      { returnOriginal: false }
+      { returnDocument: 'after' }
     )
 
     return result.value

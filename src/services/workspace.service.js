@@ -37,7 +37,26 @@ const getFullWorkspace = async (workspaceId, userId) => {
   }
 }
 
+const update = async (id, data) => {
+  try {
+    const updateData = {
+      ...data,
+      updatedAt: Date.now()
+    }
+    if (updateData._id) delete updateData._id
+    if (updateData.members) delete updateData.memebers
+
+    const updatedWorkspace = await WorkspaceModel.update(id, updateData)
+
+    return updatedWorkspace
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
+
 export const WorkspaceService = {
   createNew,
+  update,
   getFullWorkspace
 }

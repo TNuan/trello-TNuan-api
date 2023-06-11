@@ -40,8 +40,10 @@ const update = async (id, data) => {
     const result = await getDB().collection(workspaceCollectionName).findOneAndUpdate(
       { _id: ObjectId(id) },
       { $set: updateData },
-      { returnOriginal: false }
+      { returnDocument: 'after' }
     )
+
+    console.log(result)
     return result.value
   } catch (err) {
     throw new Error(err)
@@ -59,7 +61,7 @@ const pushBoardOrder = async (workspaceId, boardId) => {
     const result = await getDB().collection(workspaceCollectionName).findOneAndUpdate(
       { _id: ObjectId(workspaceId) },
       { $push: { boardOrder: boardId } },
-      { returnOriginal: false }
+      { returnDocument: 'after' }
     )
 
     return result.value
@@ -78,7 +80,7 @@ const pushMemberOrder = async (workspaceId, userId) => {
     const result = await getDB().collection(workspaceCollectionName).findOneAndUpdate(
       { _id: ObjectId(workspaceId) },
       { $push: { memberOrder: userId } },
-      { returnOriginal: false }
+      { returnDocument: 'after' }
     )
 
     return result.value

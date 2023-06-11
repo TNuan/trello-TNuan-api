@@ -62,7 +62,7 @@ const pushBoardOrder = async (userId, boardId) => {
     const result = await getDB().collection(userCollectionName).findOneAndUpdate(
       { _id: ObjectId(userId) },
       { $push: { boardOrder: boardId } },
-      { returnOriginal: false }
+      { returnDocument: 'after' }
     )
 
     return result.value
@@ -82,7 +82,7 @@ const pushWorkspaceOrder = async (userId, workspaceId) => {
     const result = await getDB().collection(userCollectionName).findOneAndUpdate(
       { _id: ObjectId(userId) },
       { $push: { workspaceOrder: workspaceId } },
-      { returnOriginal: false }
+      { returnDocument: 'after' }
     )
 
     return result.value
