@@ -64,18 +64,10 @@ const login = async (data) => {
   }
 }
 
-const getAllBoard = async (userId) => {
+const getUser = async (userId) => {
   try {
-    const user = await UserModel.getAllBoard(userId)
-
-    if (!user || !user.boards) {
-      throw new Error('Board not found!')
-    }
-    const transformUser = cloneDeep(user)
-    // Filter deleted boards
-    transformUser.boards = transformUser.boards.filter(board => !board._destroy)
-
-    return transformUser.boards
+    const user = await UserModel.getUser(userId)
+    return user
   } catch (err) {
     console.error(err)
     throw new Error(err)
@@ -85,5 +77,5 @@ const getAllBoard = async (userId) => {
 export const UserService = {
   register,
   login,
-  getAllBoard
+  getUser
 }

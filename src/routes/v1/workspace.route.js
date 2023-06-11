@@ -8,7 +8,10 @@ router.route('/')
   .post(WorkspaceValidation.createNew, WorkspaceController.createNew)
 
 router.route('/:id')
-  .get(WorkspaceController.getFullWorkspace)
   .put(WorkspaceValidation.update, WorkspaceController.update)
+
+router.route('/:id/:userId')
+  .get(WorkspaceController.getFullWorkspace)
+
 
 export const workspaceRoutes = router

@@ -91,21 +91,11 @@ const pushWorkspaceOrder = async (userId, workspaceId) => {
   }
 }
 
-const getAllBoard = async (userId) => {
+const getUser = async (userId) => {
   try {
-    const result = await getDB().collection(userCollectionName).aggregate([
-      { $match: {
-        _id: ObjectId(userId)
-      } },
-      { $lookup: {
-        from: BoardModel.boardCollectionName, // collection name
-        localField: '_id',
-        foreignField: 'author',
-        as: 'boards'
-      } }
-    ]).toArray()
+    const result = await getDB().collection(userCollectionName).findOne({ _id: ObjectId(userId) })
 
-    return result[0] || {}
+    return result
   } catch (err) {
     throw new Error(err)
   }
@@ -117,6 +107,6 @@ export const UserModel = {
   pushWorkspaceOrder,
   findOne,
   findById,
-  getAllBoard,
+  getUser,
   userCollectionName
 }

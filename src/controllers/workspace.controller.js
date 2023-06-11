@@ -15,8 +15,8 @@ const createNew = async (req, res) => {
 
 const getFullWorkspace = async (req, res) => {
   try {
-    const { id } = req.params
-    const result = await WorkspaceService.getFullWorkspace(id, req.body)
+    const { id, userId } = req.params
+    const result = await WorkspaceService.getFullWorkspace(id, userId)
     res.status(HttpStatusCode.OK).json(result)
   } catch (err) {
     console.error(err)
