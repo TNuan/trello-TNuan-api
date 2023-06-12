@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
 import { getDB } from '*/config/mongodb'
-import { BoardModel } from './board.model'
+import { WorkspaceModel } from './workspace.model'
 
 //Degine User Collection
 const userCollectionName = 'users'
@@ -91,11 +91,49 @@ const pushWorkspaceOrder = async (userId, workspaceId) => {
   }
 }
 
-const getUser = async (userId) => {
+const update = async (id, data) => {
   try {
-    const result = await getDB().collection(userCollectionName).findOne({ _id: ObjectId(userId) })
+    const updateData = { ...data }
+    const result = await getDB().collection(userCollectionName).findOneAndUpdate(
+      { _id: ObjectId(id) },
+      { $set: updateData },
+      { returnDocument: 'after' }
+    )
+    return result.value
+  } catch (err) {
+    throw new Error(err)
+  }
+}
 
-    return result
+const getAllUser = async (userId) => {
+  try {
+    const result = await getDB().collection(userCollectionName).aggregate([
+      {
+        $match: {
+          _id: ObjectId(userId)
+        }
+      },
+      {
+        $lookup: {
+          from: WorkspaceModel.workspaceCollectionName, // collection name
+          pipeline: [
+            {
+              $match:
+              {
+                $expr:
+                {
+                  $in: [ userId, '$memberOrder' ]
+                }
+              }
+            }
+          ],
+          as: 'workspaces'
+        }
+      }
+
+    ]).toArray()
+
+    return result[0] || {}
   } catch (err) {
     throw new Error(err)
   }
@@ -107,6 +145,7 @@ export const UserModel = {
   pushWorkspaceOrder,
   findOne,
   findById,
-  getUser,
+  getAllUser,
+  update,
   userCollectionName
 }

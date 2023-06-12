@@ -89,7 +89,6 @@ const pushMemberOrder = async (workspaceId, userId) => {
   }
 }
 
-
 const getFullWorkspace = async (workspaceId) => {
   try {
     const result = await getDB().collection(workspaceCollectionName).aggregate([
