@@ -93,22 +93,45 @@ const pushMemberOrder = async (workspaceId, userId) => {
 const getFullWorkspace = async (workspaceId) => {
   try {
     const result = await getDB().collection(workspaceCollectionName).aggregate([
-      { $match: {
-        _id: ObjectId(workspaceId),
-        _destroy: false
-      } },
-      { $lookup: {
-        from: BoardModel.boardCollectionName, // collection name
-        localField: '_id',
-        foreignField: 'workspaceId',
-        as: 'boards'
-      } },
-      { $lookup: {
-        from: UserModel.userCollectionName, // collection name
-        localField: '_id',
-        foreignField: 'workspaceId',
-        as: 'members'
-      } }
+      {
+        $match: {
+          _id: ObjectId(workspaceId),
+          _destroy: false
+        }
+      },
+      {
+        $lookup: {
+          from: BoardModel.boardCollectionName, // collection name
+          localField: '_id',
+          foreignField: 'workspaceId',
+          as: 'boards'
+        }
+      },
+      {
+        $lookup: {
+          from: UserModel.userCollectionName, // collection name
+          let: { memberOrder: '$memberOrder' },
+          pipeline: [
+            {
+              $match:
+              {
+                $expr:
+                {
+                  $in: [
+                    '$_id',
+                    { $map: {
+                      input: '$$memberOrder',
+                      as: 'id',
+                      in: { $toObjectId: '$$id' }
+                    } }
+                  ]
+                }
+              }
+            }
+          ],
+          as: 'members'
+        }
+      }
     ]).toArray()
 
     return result[0] || {}
