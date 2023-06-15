@@ -31,7 +31,18 @@ const update = async (id, data) => {
   }
 }
 
+const getAllCardWorkspaces = async (data) => {
+  try {
+    const cards = await CardModel.getAllCardWorkspaces(data.boardOrder)
+
+    return cards
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
 export const CardService = {
   createNew,
-  update
+  update,
+  getAllCardWorkspaces
 }

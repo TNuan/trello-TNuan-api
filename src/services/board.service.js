@@ -6,7 +6,7 @@ import { cloneDeep } from 'lodash'
 const createNew = async (data) => {
   try {
     const newBoard = await BoardModel.createNew(data)
-    await UserModel.pushBoardOrder(newBoard.author.toString(), newBoard._id.toString())
+    // await UserModel.pushWorkspaceOrder(newBoard.author.toString(), newBoard._id.toString())
     await WorkspaceModel.pushBoardOrder(newBoard.workspaceId.toString(), newBoard._id.toString())
     await BoardModel.pushUserOrder(newBoard._id.toString(), newBoard.author.toString())
     return newBoard

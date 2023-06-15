@@ -1,6 +1,8 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
 import { getDB } from '*/config/mongodb'
+import { BoardModel } from './board.model'
+import { UserModel } from './user.model'
 
 //Degine Card Collection
 const cardCollectionName = 'cards'
@@ -8,6 +10,7 @@ const cardCollectionSchema = Joi.object({
   boardId: Joi.string().required(), // Also ObjectId when create new
   columnId: Joi.string().required(), // Also ObjectId when create new
   title: Joi.string().required().min(3).max(30).trim(),
+  labelOrder: Joi.array().items(Joi.string()).default([]),
   cover: Joi.string().default(null),
   createdAt: Joi.date().timestamp().default(Date.now()),
   updatedAt: Joi.date().timestamp().default(null),
@@ -68,9 +71,87 @@ const deleteMany = async (ids) => {
   }
 }
 
+const getAllCardWorkspaces = async (boardIds) => {
+  try {
+    const result = await Promise.all(boardIds.map(async (boardId) => {
+      const cards = await getDB().collection(cardCollectionName).aggregate([
+        {
+          $match: {
+            boardId: ObjectId(boardId),
+            _destroy: false
+          }
+        },
+        {
+          $lookup: {
+            from: BoardModel.boardCollectionName, // collection name
+            localField: 'boardId',
+            foreignField: '_id',
+            pipeline: [
+              {
+                $project: {
+                  _id: 1,
+                  author: 1,
+                  title: 1,
+                  userOrder: 1
+                }
+              }
+            ],
+            as: 'board'
+          }
+        },
+        { $unwind: '$board' },
+        {
+          $lookup: {
+            from: UserModel.userCollectionName, // collection name
+            let: { memberOrder: '$board.userOrder' },
+            pipeline: [
+              {
+                $match:
+                {
+                  $expr:
+                  {
+                    $in: [
+                      '$_id',
+                      {
+                        $map: {
+                          input: '$$memberOrder',
+                          as: 'id',
+                          in: { $toObjectId: '$$id' }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                $project: {
+                  username: 1
+                }
+              }
+            ],
+            as: 'members'
+          }
+        }
+      ]).toArray()
+
+      return cards
+    }))
+
+    const flattenedResult = result.flat() // Hợp nhất các mảng con thành một mảng duy nhất
+
+    console.log('FINAL result:', flattenedResult)
+    return flattenedResult
+  } catch (err) {
+    console.log('Error:', err)
+    throw new Error(err)
+  }
+}
+
+
 export const CardModel = {
   cardCollectionName,
   createNew,
   update,
-  deleteMany
+  deleteMany,
+  getAllCardWorkspaces
 }

@@ -64,9 +64,9 @@ const login = async (data) => {
   }
 }
 
-const getUser = async (userId) => {
+const getAllUser = async (userId) => {
   try {
-    const user = await UserModel.getUser(userId)
+    const user = await UserModel.getAllUser(userId)
     return user
   } catch (err) {
     console.error(err)
@@ -74,8 +74,25 @@ const getUser = async (userId) => {
   }
 }
 
+const update = async (id, data) => {
+  try {
+    const updateData = {
+      ...data,
+      updatedAt: Date.now()
+    }
+    if (updateData._id) delete updateData._id
+
+    const updatedUser = await UserModel.update(id, updateData)
+
+    return updatedUser
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
 export const UserService = {
   register,
   login,
-  getUser
+  getAllUser,
+  update
 }

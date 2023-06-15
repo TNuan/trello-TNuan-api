@@ -23,6 +23,7 @@ router.route('/secret')
   .get(passport.authenticate('jwt', { session: false }), UserController.secret)
 
 router.route('/:id')
-  .get(UserController.getUser)
+  .get(UserController.getAllUser)
+  .put(UserValidation.update, UserController.update)
 
 export const userRoutes = router

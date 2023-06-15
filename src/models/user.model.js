@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
 import { getDB } from '*/config/mongodb'
-import { BoardModel } from './board.model'
+import { WorkspaceModel } from './workspace.model'
 
 //Degine User Collection
 const userCollectionName = 'users'
@@ -13,7 +13,7 @@ const userCollectionSchema = Joi.object({
   authType: Joi.string().valid('local', 'facebook', 'google').default('local'),
   authGoogleID: Joi.string().default(null),
   authFacebookID: Joi.string().default(null),
-  boardOrder: Joi.array().items(Joi.string()).default([]),
+  // boardOrder: Joi.array().items(Joi.string()).default([]),
   workspaceOrder: Joi.array().items(Joi.string()).default([]),
   createdAt: Joi.date().timestamp().default(Date.now()),
   updatedAt: Joi.date().timestamp().default(null)
@@ -52,24 +52,24 @@ const findById = async (data) => {
 }
 
 
-/**
- * @param {string} userId
- * @param {string} boardId
- * @returns
- */
-const pushBoardOrder = async (userId, boardId) => {
-  try {
-    const result = await getDB().collection(userCollectionName).findOneAndUpdate(
-      { _id: ObjectId(userId) },
-      { $push: { boardOrder: boardId } },
-      { returnDocument: 'after' }
-    )
+// /**
+//  * @param {string} userId
+//  * @param {string} boardId
+//  * @returns
+//  */
+// const pushBoardOrder = async (userId, boardId) => {
+//   try {
+//     const result = await getDB().collection(userCollectionName).findOneAndUpdate(
+//       { _id: ObjectId(userId) },
+//       { $push: { boardOrder: boardId } },
+//       { returnDocument: 'after' }
+//     )
 
-    return result.value
-  } catch (err) {
-    throw new Error(err)
-  }
-}
+//     return result.value
+//   } catch (err) {
+//     throw new Error(err)
+//   }
+// }
 
 
 /**
@@ -91,11 +91,49 @@ const pushWorkspaceOrder = async (userId, workspaceId) => {
   }
 }
 
-const getUser = async (userId) => {
+const update = async (id, data) => {
   try {
-    const result = await getDB().collection(userCollectionName).findOne({ _id: ObjectId(userId) })
+    const updateData = { ...data }
+    const result = await getDB().collection(userCollectionName).findOneAndUpdate(
+      { _id: ObjectId(id) },
+      { $set: updateData },
+      { returnDocument: 'after' }
+    )
+    return result.value
+  } catch (err) {
+    throw new Error(err)
+  }
+}
 
-    return result
+const getAllUser = async (userId) => {
+  try {
+    const result = await getDB().collection(userCollectionName).aggregate([
+      {
+        $match: {
+          _id: ObjectId(userId)
+        }
+      },
+      {
+        $lookup: {
+          from: WorkspaceModel.workspaceCollectionName, // collection name
+          pipeline: [
+            {
+              $match:
+              {
+                $expr:
+                {
+                  $in: [ userId, '$memberOrder' ]
+                }
+              }
+            }
+          ],
+          as: 'workspaces'
+        }
+      }
+
+    ]).toArray()
+
+    return result[0] || {}
   } catch (err) {
     throw new Error(err)
   }
@@ -103,10 +141,11 @@ const getUser = async (userId) => {
 
 export const UserModel = {
   createNew,
-  pushBoardOrder,
+  // pushBoardOrder,
   pushWorkspaceOrder,
   findOne,
   findById,
-  getUser,
+  getAllUser,
+  update,
   userCollectionName
 }

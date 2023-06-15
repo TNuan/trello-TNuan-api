@@ -33,7 +33,26 @@ const login = async (req, res, next) => {
   }
 }
 
+const update = async (req, res, next) => {
+  const condition = Joi.object({
+    workspaceOrder: Joi.array().items(Joi.string()),
+    boardOrder: Joi.array().items(Joi.string())
+  })
+  try {
+    await condition.validateAsync(req.body, {
+      abortEarly: false,
+      allowUnknown: true
+    })
+    next()
+  } catch (err) {
+    res.status(HttpStatusCode.BAD_REQUEST).json({
+      errors: new Error(err).message
+    })
+  }
+}
+
 export const UserValidation = {
   register,
-  login
+  login,
+  update
 }
