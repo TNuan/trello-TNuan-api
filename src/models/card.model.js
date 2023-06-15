@@ -81,7 +81,7 @@ const getAllCardWorkspaces = async (boardIds) => {
             _destroy: false
           }
         },
-        {
+        { // Join bang board va lay ra thong tin board theo boardId cua card
           $lookup: {
             from: BoardModel.boardCollectionName, // collection name
             localField: 'boardId',
@@ -100,10 +100,10 @@ const getAllCardWorkspaces = async (boardIds) => {
           }
         },
         { $unwind: '$board' },
-        {
+        { // Join bang user va lay ra thong tin user theo userOrder cua board o tren
           $lookup: {
             from: UserModel.userCollectionName, // collection name
-            let: { memberOrder: '$board.userOrder' },
+            let: { memberOrder: '$board.userOrder' }, 
             pipeline: [
               {
                 $match:
