@@ -10,4 +10,7 @@ router.route('/')
 router.route('/:id')
   .put(CardController.update, CardController.update)
 
+router.route('/getmany')
+  .get(CardController.getAllCardWorkspaces)
+
 export const cardRoutes = router

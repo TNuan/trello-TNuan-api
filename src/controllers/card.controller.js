@@ -25,7 +25,20 @@ const update = async (req, res) => {
   }
 }
 
+const getAllCardWorkspaces = async (req, res) => {
+  try {
+    const result = await CardService.getAllCardWorkspaces(req.body)
+    res.status(HttpStatusCode.OK).json(result)
+  } catch (err) {
+    console.error(err)
+    res.status(HttpStatusCode.INTERNAL_SERVER).json({
+      errors: err.message
+    })
+  }
+}
+
 export const CardController = {
   createNew,
-  update
+  update,
+  getAllCardWorkspaces
 }

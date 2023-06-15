@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb'
 import { getDB } from '*/config/mongodb'
 import { BoardModel } from './board.model'
 import { UserModel } from './user.model'
+import { CardModel } from './card.model'
 
 //Degine workspace Collection
 const workspaceCollectionName = 'workspaces'
@@ -118,17 +119,58 @@ const getFullWorkspace = async (workspaceId) => {
                 {
                   $in: [
                     '$_id',
-                    { $map: {
-                      input: '$$memberOrder',
-                      as: 'id',
-                      in: { $toObjectId: '$$id' }
-                    } }
+                    {
+                      $map: {
+                        input: '$$memberOrder',
+                        as: 'id',
+                        in: { $toObjectId: '$$id' }
+                      }
+                    }
                   ]
                 }
               }
             }
           ],
           as: 'members'
+        }
+      }
+    ]).toArray()
+
+    return result[0] || {}
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
+const getAllCardWorkspace = async (workspaceId) => {
+  try {
+    const result = await getDB().collection(workspaceCollectionName).aggregate([
+      {
+        $match: {
+          _id: ObjectId(workspaceId),
+          _destroy: false
+        }
+      },
+      {
+        $lookup: {
+          from: BoardModel.boardCollectionName, // collection name
+          localField: '_id',
+          foreignField: 'workspaceId',
+          as: 'boards'
+        }
+      },
+      {
+        $unwind: {
+          path: '$boards',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: CardModel.cardCollectionName,
+          localField: 'boards._id',
+          foreignField: 'boardId',
+          as: 'boards.cards'
         }
       }
     ]).toArray()

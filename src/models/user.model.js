@@ -13,7 +13,7 @@ const userCollectionSchema = Joi.object({
   authType: Joi.string().valid('local', 'facebook', 'google').default('local'),
   authGoogleID: Joi.string().default(null),
   authFacebookID: Joi.string().default(null),
-  boardOrder: Joi.array().items(Joi.string()).default([]),
+  // boardOrder: Joi.array().items(Joi.string()).default([]),
   workspaceOrder: Joi.array().items(Joi.string()).default([]),
   createdAt: Joi.date().timestamp().default(Date.now()),
   updatedAt: Joi.date().timestamp().default(null)
@@ -52,24 +52,24 @@ const findById = async (data) => {
 }
 
 
-/**
- * @param {string} userId
- * @param {string} boardId
- * @returns
- */
-const pushBoardOrder = async (userId, boardId) => {
-  try {
-    const result = await getDB().collection(userCollectionName).findOneAndUpdate(
-      { _id: ObjectId(userId) },
-      { $push: { boardOrder: boardId } },
-      { returnDocument: 'after' }
-    )
+// /**
+//  * @param {string} userId
+//  * @param {string} boardId
+//  * @returns
+//  */
+// const pushBoardOrder = async (userId, boardId) => {
+//   try {
+//     const result = await getDB().collection(userCollectionName).findOneAndUpdate(
+//       { _id: ObjectId(userId) },
+//       { $push: { boardOrder: boardId } },
+//       { returnDocument: 'after' }
+//     )
 
-    return result.value
-  } catch (err) {
-    throw new Error(err)
-  }
-}
+//     return result.value
+//   } catch (err) {
+//     throw new Error(err)
+//   }
+// }
 
 
 /**
@@ -141,7 +141,7 @@ const getAllUser = async (userId) => {
 
 export const UserModel = {
   createNew,
-  pushBoardOrder,
+  // pushBoardOrder,
   pushWorkspaceOrder,
   findOne,
   findById,
