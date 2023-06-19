@@ -2,8 +2,9 @@ import Joi from 'joi'
 import { HttpStatusCode } from '*/utilities/constants'
 
 const createNew = async (req, res, next) => {
+  console.log(req.body)
   const condition = Joi.object({
-    title: Joi.string().required().min(3).max(20).trim(),
+    title: Joi.string().required().min(3).max(40).trim(),
     author: Joi.string().required(),
     workspaceId: Joi.string().required()
   })
@@ -19,7 +20,7 @@ const createNew = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   const condition = Joi.object({
-    title: Joi.string().min(3).max(20).trim(),
+    title: Joi.string().min(3).max(40).trim(),
     columnOrder: Joi.array().items(Joi.string())
   })
   try {

@@ -5,7 +5,7 @@ const createNew = async (req, res, next) => {
   const condition = Joi.object({
     boardId: Joi.string().required(),
     columnId: Joi.string().required(),
-    title: Joi.string().required().min(3).max(30).trim(),
+    title: Joi.string().required().min(3).max(50).trim(),
     labelOrder: Joi.array().items(Joi.string()).default([])
   })
   try {
