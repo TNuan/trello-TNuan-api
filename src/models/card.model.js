@@ -9,7 +9,7 @@ const cardCollectionName = 'cards'
 const cardCollectionSchema = Joi.object({
   boardId: Joi.string().required(), // Also ObjectId when create new
   columnId: Joi.string().required(), // Also ObjectId when create new
-  title: Joi.string().required().min(3).max(30).trim(),
+  title: Joi.string().required().min(3).max(50).trim(),
   labelOrder: Joi.array().items(Joi.string()).default([]),
   cover: Joi.string().default(null),
   createdAt: Joi.date().timestamp().default(Date.now()),
@@ -138,8 +138,6 @@ const getAllCardWorkspaces = async (boardIds) => {
     }))
 
     const flattenedResult = result.flat() // Hợp nhất các mảng con thành một mảng duy nhất
-
-    console.log('FINAL result:', flattenedResult)
     return flattenedResult
   } catch (err) {
     console.log('Error:', err)

@@ -7,7 +7,7 @@ import { CardModel } from './card.model'
 //Degine Board Collection
 const boardCollectionName = 'boards'
 const boardCollectionSchema = Joi.object({
-  title: Joi.string().required().min(3).max(20).trim(),
+  title: Joi.string().required().min(3).max(40).trim(),
   author: Joi.string().required(),
   workspaceId: Joi.string().required(),
   userOrder: Joi.array().items(Joi.string()).default([]),

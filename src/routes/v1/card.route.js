@@ -11,6 +11,6 @@ router.route('/:id')
   .put(CardController.update, CardController.update)
 
 router.route('/getmany')
-  .get(CardController.getAllCardWorkspaces)
+  .post(CardController.getAllCardWorkspaces)
 
 export const cardRoutes = router
