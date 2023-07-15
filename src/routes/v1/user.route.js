@@ -26,4 +26,7 @@ router.route('/:id')
   .get(UserController.getAllUser)
   .put(UserValidation.update, UserController.update)
 
+router.route('/search/:key')
+  .get(UserController.searchUsers)
+
 export const userRoutes = router

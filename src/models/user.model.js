@@ -51,6 +51,20 @@ const findById = async (data) => {
   }
 }
 
+const searchUsers = async (key) => {
+  try {
+    const result = await getDB().collection(userCollectionName).find({
+      '$or': [
+        { username: { $regex: key } },
+        { email: { $regex: key } }
+      ]
+    }).project({ username: 1 }).toArray()
+    return result
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
 
 // /**
 //  * @param {string} userId
@@ -122,7 +136,7 @@ const getAllUser = async (userId) => {
               {
                 $expr:
                 {
-                  $in: [ userId, '$memberOrder' ]
+                  $in: [userId, '$memberOrder']
                 }
               }
             }
@@ -147,5 +161,6 @@ export const UserModel = {
   findById,
   getAllUser,
   update,
+  searchUsers,
   userCollectionName
 }

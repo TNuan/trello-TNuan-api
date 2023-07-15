@@ -66,6 +66,18 @@ const update = async (req, res) => {
   }
 }
 
+const searchUsers = async (req, res) => {
+  try {
+    const { key } = req.params
+    const result = await UserService.searchUsers(key)
+    res.status(HttpStatusCode.OK).json(result)
+  } catch (err) {
+    res.status(HttpStatusCode.INTERNAL_SERVER).json({
+      errors: err.message
+    })
+  }
+}
+
 export const UserController = {
   register,
   authGoogle,
@@ -73,5 +85,6 @@ export const UserController = {
   login,
   secret,
   getAllUser,
-  update
+  update,
+  searchUsers
 }
