@@ -55,8 +55,9 @@ const searchUsers = async (key) => {
   try {
     const result = await getDB().collection(userCollectionName).find({
       '$or': [
-        { username: { $regex: key } },
-        { email: { $regex: key } }
+        { username: { $regex: `^${key}.*`, $options: 'si' } },
+        { email: { $regex: `^${key}.*@`, $options: 'si' } },
+        { email: key }
       ]
     }).project({ username: 1 }).toArray()
     return result
