@@ -90,9 +90,20 @@ const update = async (id, data) => {
   }
 }
 
+const searchUsers = async (key) => {
+  try {
+    const user = await UserModel.searchUsers(key)
+    return user
+  } catch (err) {
+    console.error(err)
+    throw new Error(err)
+  }
+}
+
 export const UserService = {
   register,
   login,
   getAllUser,
-  update
+  update,
+  searchUsers
 }
