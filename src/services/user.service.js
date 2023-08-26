@@ -35,7 +35,7 @@ const register = async (data) => {
       author: user.insertedId.toString()
     })
     // Encode a token
-    const token = encodeToken(user.insertedId)
+    const token = encodeToken(user.insertedId.toString())
 
     delete user.password
     return { status: true, token }
@@ -55,7 +55,7 @@ const login = async (data) => {
     if (!isPasswordValid) return { msg: 'Incorrect password', status: false }
 
     // Encode a token
-    const token = encodeToken(user.insertedId)
+    const token = encodeToken(user._id.toString())
 
     delete user.password
     return { status: true, user, token }
