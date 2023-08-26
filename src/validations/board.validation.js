@@ -6,6 +6,7 @@ const createNew = async (req, res, next) => {
   const condition = Joi.object({
     title: Joi.string().required().min(3).max(40).trim(),
     author: Joi.string().required(),
+    userOrder: Joi.array().items(Joi.string()),
     workspaceId: Joi.string().required()
   })
   try {
