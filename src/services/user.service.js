@@ -30,15 +30,20 @@ const register = async (data) => {
       password: hashedPassword
     })
 
-    WorkspaceService.createNew({
-      title: 'Workspace',
+    await WorkspaceService.createNew({
+      title: 'Workspace ' + username,
       author: user.insertedId.toString()
     })
     // Encode a token
     const token = encodeToken(user.insertedId.toString())
 
-    delete user.password
-    return { status: true, token }
+    const result = await UserModel.findOne({ _id: user.insertedId })
+    delete result.password
+    return {
+      status: true,
+      user: result,
+      token
+    }
   } catch (err) {
     throw new Error(err)
   }
