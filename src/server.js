@@ -50,8 +50,8 @@ const bootServer = () => {
       console.log(usernames)
     })
 
-    socket.on('sendMessage', (data) => {
-      io.to(data.boardId).emit('updateBoards', socket.username, data)
+    socket.on('sendUpdateBoards', (newColumns, newBoard) => {
+      io.to(newBoard._id).emit('updateBoards', socket.username, newColumns, newBoard)
     })
 
     socket.on('joinBoard', (boardId) => {
