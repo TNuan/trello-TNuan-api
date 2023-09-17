@@ -1,5 +1,6 @@
 import { CardModel } from '*/models/card.model'
 import { ColumnModel } from '*/models/column.model'
+import { uploadToCloudinary } from '../config/cloudinary'
 
 const createNew = async (data) => {
   try {
@@ -17,8 +18,18 @@ const createNew = async (data) => {
 
 const update = async (id, data) => {
   try {
+    let fileAttachmentData = {}
+    if (data.fileAttachment.base64EncodedImage) {
+      const results = await uploadToCloudinary(data.fileAttachment.base64EncodedImage, 'card-attchment')
+      fileAttachmentData = results
+    }
+
     const updateData = {
       ...data,
+      fileAttachment: {
+        filename: data.fileAttachment.filename,
+        ...fileAttachmentData
+      },
       updatedAt: Date.now()
     }
     if (updateData._id) delete updateData._id
