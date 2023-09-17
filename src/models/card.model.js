@@ -10,8 +10,18 @@ const cardCollectionSchema = Joi.object({
   boardId: Joi.string().required(), // Also ObjectId when create new
   columnId: Joi.string().required(), // Also ObjectId when create new
   title: Joi.string().required().min(3).max(50).trim(),
+  description: Joi.string().trim(),
   labelOrder: Joi.array().items(Joi.string()).default([]),
   cover: Joi.string().default(null),
+  fileAttachment:  {
+    filename: Joi.string().required(),
+    publicId: Joi.string().required(),
+    url: Joi.string().required()
+  },
+  memeberOrder: Joi.array().items(Joi.string()).default([]),
+  isDone: Joi.boolean().default(false),
+  startAt: Joi.date().timestamp().default(null),
+  endAt: Joi.date().timestamp().default(null),
   createdAt: Joi.date().timestamp().default(Date.now()),
   updatedAt: Joi.date().timestamp().default(null),
   _destroy: Joi.boolean().default(false)
@@ -103,7 +113,7 @@ const getAllCardWorkspaces = async (boardIds) => {
         { // Join bang user va lay ra thong tin user theo userOrder cua board o tren
           $lookup: {
             from: UserModel.userCollectionName, // collection name
-            let: { memberOrder: '$board.userOrder' }, 
+            let: { memberOrder: '$board.userOrder' },
             pipeline: [
               {
                 $match:

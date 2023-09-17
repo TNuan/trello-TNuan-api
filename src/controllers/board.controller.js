@@ -38,6 +38,18 @@ const update = async (req, res) => {
   }
 }
 
+// const delete = async (req, res) => {
+//   try {
+//     const { id } = req.params
+//     const result = await BoardService.delete(id)
+
+//   } catch (err) {
+//     res.status(HttpStatusCode.INTERNAL_SERVER).json({
+//       errors: err.message
+//     })
+//   }
+// }
+
 export const BoardController = {
   createNew,
   getFullBoard,
