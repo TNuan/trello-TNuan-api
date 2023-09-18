@@ -19,19 +19,24 @@ const createNew = async (data) => {
 const update = async (id, data) => {
   try {
     let fileAttachmentData = {}
+    let updateData = {
+      ...data,
+      updatedAt: Date.now()
+    }
     if (data.fileAttachment.base64EncodedImage) {
       const results = await uploadToCloudinary(data.fileAttachment.base64EncodedImage, 'card-attchment')
       fileAttachmentData = results
+
+      updateData = {
+        ...data,
+        fileAttachment: {
+          filename: data.fileAttachment.filename,
+          ...fileAttachmentData
+        },
+        updatedAt: Date.now()
+      }
     }
 
-    const updateData = {
-      ...data,
-      fileAttachment: {
-        filename: data.fileAttachment.filename,
-        ...fileAttachmentData
-      },
-      updatedAt: Date.now()
-    }
     if (updateData._id) delete updateData._id
 
     const updatedCard = await CardModel.update(id, updateData)
